@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: soc-multi-agent-orchestrator
+    runtime: python
+    plan: starter
+    region: oregon
+    branch: main
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MAX_TRIAGE_ITERATIONS
+        value: "3"
+      - key: LLM_TIMEOUT_SECONDS
+        value: "6"
+      - key: CORS_ORIGINS
+        value: "*"
+      # Optional - leave unset to run fully offline with deterministic
+      # templated reasoning and the in-memory NetworkX graph:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GRAPH_DB_URI
+        sync: false
+      - key: VECTOR_DB_URL
+        sync: false
